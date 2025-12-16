@@ -28,8 +28,11 @@ def main():
     if not response.usage_metadata:
         raise RuntimeError("Gemini API response appears to be malformed")
 
-    print("Prompt tokens:", response.usage_metadata.prompt_token_count)
-    print("Response tokens:", response.usage_metadata.candidates_token_count)
+    if args.verbose:
+        print(f"User prompt: {args.user_prompt}")
+        print("Prompt tokens:", response.usage_metadata.prompt_token_count)
+        print("Response tokens:", response.usage_metadata.candidates_token_count)
+        
     print("Response:")
     print(response.text)
 
