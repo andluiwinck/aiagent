@@ -1,10 +1,12 @@
+import argparse
 import os
+
 from dotenv import load_dotenv
 from google import genai
-import argparse
 from google.genai import types
+
+from call_function import available_functions, call_function
 from prompts import system_prompt
-from call_function import available_functions
 
 
 def main():
@@ -44,8 +46,18 @@ def main():
         print(response.text)
         return
 
+    function_response_parts = []
     for function_call in response.function_calls:
-        print(f"Calling function: {function_call.name}({function_call.args})")
+        function_call_result = call_function(function_call, verbose=args.verbose)
+        if (
+            not function_call_result.parts
+            or not function_call_result.parts[0].function_response
+            or function_call_result.parts[0].function_response.response is None
+        ):
+            raise RuntimeError("Function call result missing function_response")
+        function_response_parts.append(function_call_result.parts[0])
+        if args.verbose:
+            print(f"-> {function_call_result.parts[0].function_response.response}")
 
 
 if __name__ == "__main__":
