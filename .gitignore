@@ -15,3 +15,8 @@ wheels/
 # Ignored text files
 lorem.txt
 morelorem.txt
+
+# IDE files
+.vscode/
+.idea/
+*.iml
